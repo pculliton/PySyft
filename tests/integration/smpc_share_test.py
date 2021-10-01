@@ -1,6 +1,5 @@
 # stdlib
 import operator
-import time
 
 # third party
 import numpy as np
@@ -29,9 +28,6 @@ def test_secret_sharing() -> None:
     value_secret = clients[0].syft.core.tensor.tensor.Tensor(data)
     mpc_tensor = MPCTensor(secret=value_secret, shape=(2, 5), parties=clients)
 
-    # wait for network comms between nodes
-    time.sleep(2)
-
     res = mpc_tensor.reconstruct()
     assert (res == data).all()
 
@@ -52,7 +48,6 @@ def test_mpc_private_private_op(op_str: str) -> None:
     op = getattr(operator, op_str)
 
     res = op(mpc_tensor_1, mpc_tensor_2)
-    time.sleep(2)
     res = res.reconstruct()
     expected = op(value_1, value_2)
 
@@ -73,7 +68,6 @@ def test_mpc_public_private_op(op_str: str) -> None:
     op = getattr(operator, op_str)
 
     res = op(mpc_tensor_1, public_value)
-    time.sleep(2)
     res = res.reconstruct()
     expected = op(value_1, public_value)
 
